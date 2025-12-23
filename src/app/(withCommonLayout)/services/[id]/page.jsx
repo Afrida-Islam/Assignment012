@@ -8,14 +8,14 @@ import {
   ArrowLeft,
   ShieldCheck,
 } from "lucide-react";
-// আপনার প্রজেক্ট স্ট্রাকচার অনুযায়ী পাথ ঠিক করুন (যেমন: @/data/services.json)
-import localServices from "@/data/services.json";
+// Correct the path according to your project structure (e.g., @/data/services.json)
+import localServices from "../../../data/services.json";
 
-export default async function ServiceDetails({ params }) {
-  // ডাইনামিক আইডিটি রিসিভ করা
+export default async function ServiceDetailsPage({ params }) {
+  // Receive the dynamic ID
   const { id } = await params;
 
-  // JSON থেকে ডাটা ফিল্টার করা
+  // Filter data from JSON
   const service = localServices.find((s) => s.id === parseInt(id));
 
   if (!service) {
