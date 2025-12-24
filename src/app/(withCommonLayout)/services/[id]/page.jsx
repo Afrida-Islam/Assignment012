@@ -138,7 +138,7 @@ export default async function ServiceDetailsPage({ params }) {
               </div>
 
               {/* Booking Button */}
-              <Link href={`/booking/${service.id}`} className="block">
+              <Link href={`/services/booking/${service.id}`} className="block">
                 <button className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-[#EF6B35] transition-all transform active:scale-[0.98] shadow-lg shadow-orange-100">
                   Book This Service
                 </button>
