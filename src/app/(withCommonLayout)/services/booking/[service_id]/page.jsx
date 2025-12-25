@@ -13,8 +13,8 @@ import {
 import Link from "next/link";
 import localServices from "../../../../data/services.json";
 import { BookingContext } from "../../../../Context/booking.context";
-import Navbar from "@/app/Components/Navbar";
-import Footer from "@/app/Components/Footer";
+// import Navbar from "@/app/Components/Navbar";
+// import Footer from "@/app/Components/Footer";
 
 const BookingPage = () => {
   const { service_id } = useParams();
@@ -69,7 +69,6 @@ const BookingPage = () => {
 
   return (
     <section className="min-h-screen bg-[#FDF8F6] py-12 px-4">
-      <Navbar />
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between mb-12 relative px-4">
           <div className="absolute top-1/2 left-0 w-full h-1 bg-orange-100 -translate-y-1/2 z-0"></div>
@@ -298,7 +297,6 @@ const BookingPage = () => {
           )}
         </div>
       </div>
-      <Footer />
     </section>
   );
 };
