@@ -40,7 +40,6 @@ const MyBookings = () => {
       "Are you sure you want to cancel this booking?"
     );
     if (confirmDelete) {
-      // কনটেক্সট থেকে ওই নির্দিষ্ট আইডি বাদ দিয়ে নতুন লিস্ট সেট করা
       const updatedBookings = bookings.filter((b) => (b._id || b.id) !== id);
       setBookings(updatedBookings);
       alert("Booking cancelled successfully!");

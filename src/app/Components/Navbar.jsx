@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useContext } from "react";
+import { useRouter } from "next/navigation"; // ১. useRouter ইমপোর্ট করুন
 import Container from "./Container";
 import { HeartHandshake, Menu, X } from "lucide-react";
 import { UserContext } from "../Context/user.context";
@@ -9,13 +10,19 @@ import { UserContext } from "../Context/user.context";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const router = useRouter(); // ২. রাউটার ইনিশিয়ালাইজ করুন
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem("logged_in_user"); // ডেটা ডিলিট করে দিন
-    router.push("/login");
+    localStorage.removeItem("logged_in_user");
+
+    // ৩. হোম পেজে রিডাইরেক্ট করুন
+    router.push("/");
+
+    // মোবাইল মেনু খোলা থাকলে তা বন্ধ করে দিন
+    setIsOpen(false);
   };
 
   const navLinks = [
@@ -55,7 +62,6 @@ const Navbar = () => {
                 <Link href={link.href}>{link.name}</Link>
               </li>
             ))}
-
             {user?.email && (
               <li className="hover:text-[#EF6B35] transition-colors text-[28px] text-[#EF6B35]">
                 <Link href="/mybooking">My Booking</Link>
@@ -63,16 +69,16 @@ const Navbar = () => {
             )}
           </ul>
 
-          {/* Desktop Action Buttons */}
+          {/* Action Buttons */}
           <div className="hidden lg:flex items-center gap-6">
             {user?.email ? (
               <div className="flex items-center gap-4">
-                <span className="text-[28px] font-bold text-gray-600 hidden xl:block">
+                <span className="text-[28px] font-bold text-gray-600">
                   Hi, {user.name || "User"}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="bg-[#FF6B35] text-white px-7 py-2.5 rounded-full font-bold uppercase tracking-wider text-xl hover:bg-[#e85a20] transition-all shadow-lg active:scale-95"
+                  className="bg-[#FF6B35] text-white px-7 py-2.5 rounded-full font-bold uppercase text-sm hover:bg-[#e85a20] transition-all"
                 >
                   Sign Out
                 </button>
@@ -80,12 +86,12 @@ const Navbar = () => {
             ) : (
               <div className="flex items-center gap-4">
                 <Link href="/services/login">
-                  <button className="bg-[#FF6B35] text-white px-7 py-2.5 rounded-full font-bold uppercase tracking-wider text-sm hover:bg-[#e85a20] transition-all shadow-lg">
+                  <button className="bg-[#FF6B35] text-white px-7 py-2.5 rounded-full font-bold uppercase text-sm shadow-lg">
                     Login
                   </button>
                 </Link>
                 <Link href="/services/signup">
-                  <button className="border-2 border-[#FF6B35] text-[#FF6B35] px-7 py-2 rounded-full font-bold uppercase tracking-wider text-sm hover:bg-[#FF6B35] hover:text-white transition-all">
+                  <button className="border-2 border-[#FF6B35] text-[#FF6B35] px-7 py-2 rounded-full font-bold uppercase text-sm hover:bg-[#FF6B35] hover:text-white transition-all">
                     Register
                   </button>
                 </Link>
@@ -103,7 +109,7 @@ const Navbar = () => {
 
         {/* Mobile Sidebar */}
         <div
-          className={`fixed inset-0 bg-[#FFF5F1] z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+          className={`fixed inset-0 bg-[#FFF5F1] z-50 transform transition-transform duration-300 lg:hidden ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -118,27 +124,24 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-
             {user?.email && (
               <Link
-                href="/dashboard"
+                href="/mybooking"
                 onClick={toggleMenu}
-                className="text-3xl hover:text-[#EF6B35] transition-colors "
+                className="text-3xl font-bold text-[#EF6B35]"
               >
                 My Booking
               </Link>
             )}
-
             <hr className="border-orange-100" />
-
             {user?.email ? (
               <div className="space-y-4">
                 <p className="font-bold text-gray-500">
-                  Logged in as: {user.email}
+                  Logged in: {user.email}
                 </p>
                 <button
                   onClick={handleLogout}
-                  className="w-full bg-[#FF6B35] text-white py-4 rounded-full font-bold uppercase shadow-lg"
+                  className="w-full bg-[#FF6B35] text-white py-4 rounded-full font-bold uppercase"
                 >
                   Sign Out
                 </button>
@@ -146,12 +149,12 @@ const Navbar = () => {
             ) : (
               <div className="flex flex-col gap-4">
                 <Link href="/services/login" onClick={toggleMenu}>
-                  <button className="w-full bg-[#FF6B35] text-white py-4 rounded-full font-bold uppercase shadow-lg">
+                  <button className="w-full bg-[#FF6B35] text-white py-5 rounded-full font-bold uppercase">
                     Login
                   </button>
                 </Link>
                 <Link href="/services/signup" onClick={toggleMenu}>
-                  <button className="w-full border-2 border-[#FF6B35] text-[#FF6B35] py-4 rounded-full font-bold uppercase shadow-md">
+                  <button className="w-full border-2 border-[#FF6B35] text-[#FF6B35] py-5 rounded-full font-bold uppercase">
                     Register
                   </button>
                 </Link>
