@@ -36,7 +36,6 @@ const BookingPage = () => {
 
   const handleNextStep = () => setStep((prev) => prev + 1);
   const handlePrevStep = () => setStep((prev) => prev - 1);
-
   const confirmBooking = async () => {
     setIsLoading(true);
 
@@ -58,7 +57,7 @@ const BookingPage = () => {
     setIsLoading(false);
 
     alert("Booking Saved Successfully!");
-    router.push("/services/my-bookings");
+    router.push("/mybooking");
   };
 
   if (!service)
@@ -132,6 +131,12 @@ const BookingPage = () => {
               >
                 Next: Location Details
               </button>
+              <button
+                onClick={() => router.push("/services")}
+                className="text-sm font-bold text-gray-400 hover:text-black transition-colors"
+              >
+                Cancel and start over
+              </button>
             </div>
           )}
 
@@ -186,6 +191,12 @@ const BookingPage = () => {
                   Review Price
                 </button>
               </div>
+              <button
+                onClick={() => router.push("/services")}
+                className="text-sm font-bold text-gray-400 hover:text-black transition-colors"
+              >
+                Cancel and start over
+              </button>
             </div>
           )}
 
@@ -234,6 +245,12 @@ const BookingPage = () => {
                   Confirm Booking
                 </button>
               </div>
+              <button
+                onClick={() => router.push("/services")}
+                className="text-sm font-bold text-gray-400 hover:text-black transition-colors"
+              >
+                Cancel and start over
+              </button>
             </div>
           )}
 
