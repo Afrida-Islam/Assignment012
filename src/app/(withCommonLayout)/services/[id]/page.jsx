@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,34 +9,51 @@ import {
   ArrowLeft,
   ShieldCheck,
 } from "lucide-react";
-// Correct the path according to your project structure (e.g., @/data/services.json)
 import localServices from "../../../data/services.json";
+import { useContext, useState, useEffect, use } from "react"; // 'use' ইম্পোর্ট করুন
+import { useRouter } from "next/navigation";
+import { UserContext } from "../../../Context/user.context";
 
-export default async function ServiceDetailsPage({ params }) {
-  // Receive the dynamic ID
-  const { id } = await params;
+export default function ServiceDetailsPage({ params }) {
+  // params কে আনর্যাপ (unwrap) করার জন্য React.use() ব্যবহার করুন
+  const unwrappedParams = use(params);
+  const id = unwrappedParams.id;
 
-  // Filter data from JSON
-  const service = localServices.find((s) => s.id === parseInt(id));
+  const [service, setService] = useState(null);
+  const { user } = useContext(UserContext);
+  const router = useRouter();
 
+  useEffect(() => {
+    const serviceData = localServices.find((s) => s.id === parseInt(id));
+    if (serviceData) {
+      setService(serviceData);
+    }
+  }, [id]);
+
+  const handleBooking = () => {
+    if (user) {
+      router.push(`/services/booking/${service.id}`);
+    } else {
+      alert("Please login to book this service.");
+      router.push("/services/login"); // লগইন না থাকলে লগইন পেজে পাঠিয়ে দেওয়া ভালো
+    }
+  };
+
+  // সার্ভিস লোড হওয়ার আগ পর্যন্ত সেফটি চেক
   if (!service) {
     return (
-      <div className="text-center py-20">
-        <h1 className="text-2xl font-bold text-gray-800">Service Not Found!</h1>
-        <Link
-          href="/services"
-          className="text-blue-500 mt-4 inline-block hover:underline"
-        >
-          Return to services
-        </Link>
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-xl font-bold animate-pulse text-[#EF6B35]">
+          Loading Service...
+        </p>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      {/* বাকি সব কোড আগের মতোই থাকবে */}
       <div className="max-w-5xl mx-auto px-4">
-        {/* Back Button */}
         <Link
           href="/services"
           className="inline-flex items-center gap-2 text-gray-600 hover:text-[#EF6B35] mb-8 transition-colors group"
@@ -48,7 +66,6 @@ export default async function ServiceDetailsPage({ params }) {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Left Side: Image and Content */}
           <div className="lg:col-span-2 space-y-8">
             <div className="relative h-[400px] w-full overflow-hidden rounded-[2.5rem] shadow-xl">
               <Image
@@ -64,19 +81,7 @@ export default async function ServiceDetailsPage({ params }) {
               <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">
                 {service.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-4 mb-6">
-                <span className="bg-orange-100 text-[#EF6B35] px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-                  {service.category}
-                </span>
-                <div className="flex items-center gap-1 text-amber-500 font-bold">
-                  <Star size={18} className="fill-current" />
-                  {service.rating}{" "}
-                  <span className="text-gray-400 font-medium">
-                    ({service.reviews} reviews)
-                  </span>
-                </div>
-              </div>
-
+              {/* ... বাকি UI ... */}
               <div className="prose max-w-none text-gray-600">
                 <h3 className="text-xl font-bold text-gray-900 mb-3 border-l-4 border-[#EF6B35] pl-3">
                   About this service
@@ -88,7 +93,6 @@ export default async function ServiceDetailsPage({ params }) {
             </div>
           </div>
 
-          {/* Right Side: Sticky Booking Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 bg-white p-8 rounded-[2rem] shadow-2xl shadow-gray-200/50 border border-gray-100">
               <div className="flex justify-between items-start mb-8">
@@ -104,7 +108,6 @@ export default async function ServiceDetailsPage({ params }) {
                   <ShieldCheck size={28} />
                 </div>
               </div>
-
               <div className="space-y-5 mb-8">
                 <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl text-gray-700">
                   <User size={20} className="text-[#EF6B35]" />
@@ -117,7 +120,6 @@ export default async function ServiceDetailsPage({ params }) {
                   </span>
                 </div>
               </div>
-
               <div className="border-t border-gray-100 pt-6 mb-8">
                 <h4 className="font-black text-gray-900 text-sm uppercase tracking-widest mb-4">
                   Highlights:
@@ -136,13 +138,12 @@ export default async function ServiceDetailsPage({ params }) {
                   ))}
                 </ul>
               </div>
-
-              {/* Booking Button */}
-              <Link href={`/services/booking/${service.id}`} className="block">
-                <button className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-[#EF6B35] transition-all transform active:scale-[0.98] shadow-lg shadow-orange-100">
-                  Book This Service
-                </button>
-              </Link>
+              <button
+                onClick={handleBooking}
+                className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-[#EF6B35] transition-all transform active:scale-[0.98] shadow-lg shadow-orange-100"
+              >
+                Book This Service
+              </button>
             </div>
           </div>
         </div>

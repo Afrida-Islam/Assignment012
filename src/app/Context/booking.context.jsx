@@ -3,19 +3,16 @@ import React, { createContext, useState } from "react";
 
 export const BookingContext = createContext(null);
 
-const BookingsContextProvider = ({ children }) => {
+const BookingContextProvider = ({ children }) => {
   const [bookings, setBookings] = useState([]);
 
-  const addBooking = (booking) => [setBookings([...bookings, booking])];
-  const removeBooking = (id) => {
-    setBookings(bookings.filter((b) => b._id != id));
+  const addBooking = (service) => {
+    setBookings((prevBookings) => [...prevBookings, service]);
   };
 
   const value = {
     bookings,
-    setBookings,
     addBooking,
-    removeBooking,
   };
 
   return (
@@ -23,4 +20,4 @@ const BookingsContextProvider = ({ children }) => {
   );
 };
 
-export default BookingsContextProvider;
+export default BookingContextProvider;

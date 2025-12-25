@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, use } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Clock,
   MapPin,
   CheckCircle2,
   CreditCard,
@@ -13,12 +12,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import localServices from "../../../../data/services.json";
+import { BookingContext } from "../../../../Context/booking.context";
 
 const BookingPage = () => {
   const { service_id } = useParams();
   const router = useRouter();
 
-  // States
+  const { addBooking } = use(BookingContext);
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [duration, setDuration] = useState(1);
@@ -28,12 +28,7 @@ const BookingPage = () => {
     city: "",
     address: "",
   });
-
-  // ১. সার্ভিস ডাটা ফেচ করা (Zapshift resources logic)
   const service = localServices.find((s) => s.id === parseInt(service_id));
-
-  // ২. ডাইনামিক কস্ট ক্যালকুলেশন
-  // আপনার JSON এ যদি price: "$50" থাকে, তবে সেটি নাম্বার করে ক্যালকুলেট করা হচ্ছে
   const unitPrice = service
     ? parseInt(service.price.replace(/[^0-9]/g, ""))
     : 0;
@@ -42,33 +37,28 @@ const BookingPage = () => {
   const handleNextStep = () => setStep((prev) => prev + 1);
   const handlePrevStep = () => setStep((prev) => prev - 1);
 
-  // ৩. বুকিং কনফার্ম করা এবং সেভ করা
   const confirmBooking = async () => {
     setIsLoading(true);
 
     const bookingData = {
-      id: Date.now(),
-      serviceId: service_id,
-      serviceTitle: service?.title,
+      _id: Date.now().toString(),
+      id: service_id,
+      title: service?.title,
+      image: service?.image,
+      category: service?.category,
+      provider: service?.provider,
       duration,
       location,
-      totalCost,
-      status: "Pending", // Default status
+      price: `$${totalCost}`,
+      status: "Pending",
       bookedAt: new Date().toLocaleString(),
     };
-
-    // Simulate API call and saving to LocalStorage
-    const existingBookings = JSON.parse(
-      localStorage.getItem("my_bookings") || "[]"
-    );
-    existingBookings.push(bookingData);
-    localStorage.setItem("my_bookings", JSON.stringify(existingBookings));
-
+    addBooking(bookingData);
     await new Promise((res) => setTimeout(res, 2000));
     setIsLoading(false);
 
-    alert("Booking Saved Successfully! Status: Pending");
-    router.push("/dashboard"); // বুকিং শেষে ড্যাশবোর্ডে নিয়ে যাবে
+    alert("Booking Saved Successfully!");
+    router.push("/services/my-bookings");
   };
 
   if (!service)
@@ -79,7 +69,6 @@ const BookingPage = () => {
   return (
     <section className="min-h-screen bg-[#FDF8F6] py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Progress Tracker */}
         <div className="flex justify-between mb-12 relative px-4">
           <div className="absolute top-1/2 left-0 w-full h-1 bg-orange-100 -translate-y-1/2 z-0"></div>
           <div
@@ -113,13 +102,13 @@ const BookingPage = () => {
                   {service.title}
                 </span>
               </p>
-
               <div className="flex items-center gap-6 p-8 bg-gray-50 rounded-[2rem] border border-gray-100">
                 <button
                   onClick={() => setDuration(Math.max(1, duration - 1))}
                   className="w-16 h-16 rounded-2xl bg-white text-3xl font-bold shadow-sm hover:bg-orange-50 transition-all"
                 >
-                  -
+                  {" "}
+                  -{" "}
                 </button>
                 <div className="flex-1 text-center">
                   <span className="text-6xl font-black text-[#EF6B35]">
@@ -133,12 +122,13 @@ const BookingPage = () => {
                   onClick={() => setDuration(duration + 1)}
                   className="w-16 h-16 rounded-2xl bg-black text-white text-3xl font-bold shadow-lg hover:bg-[#EF6B35] transition-all"
                 >
-                  +
+                  {" "}
+                  +{" "}
                 </button>
               </div>
               <button
                 onClick={handleNextStep}
-                className="w-full py-5 bg-[#EF6B35] text-white rounded-2xl font-bold text-lg shadow-lg shadow-orange-100"
+                className="w-full py-5 bg-[#EF6B35] text-white rounded-2xl font-bold text-lg shadow-lg"
               >
                 Next: Location Details
               </button>
@@ -152,34 +142,24 @@ const BookingPage = () => {
                 <MapPin className="text-[#EF6B35]" /> 2. Service Location
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-2">
-                    Division
-                  </label>
-                  <input
-                    placeholder="e.g. Dhaka"
-                    className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20 focus:bg-white"
-                    onChange={(e) =>
-                      setLocation({ ...location, division: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-gray-400 ml-2">
-                    District
-                  </label>
-                  <input
-                    placeholder="e.g. Gazipur"
-                    className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20 focus:bg-white"
-                    onChange={(e) =>
-                      setLocation({ ...location, district: e.target.value })
-                    }
-                  />
-                </div>
+                <input
+                  placeholder="Division (e.g. Dhaka)"
+                  className="w-full p-4 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20"
+                  onChange={(e) =>
+                    setLocation({ ...location, division: e.target.value })
+                  }
+                />
+                <input
+                  placeholder="District"
+                  className="w-full p-4 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20"
+                  onChange={(e) =>
+                    setLocation({ ...location, district: e.target.value })
+                  }
+                />
               </div>
               <input
                 placeholder="City/Area Name"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20 focus:bg-white"
+                className="w-full p-4 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20"
                 onChange={(e) =>
                   setLocation({ ...location, city: e.target.value })
                 }
@@ -187,7 +167,7 @@ const BookingPage = () => {
               <textarea
                 placeholder="Full Street Address"
                 rows={3}
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20 focus:bg-white"
+                className="w-full p-4 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-[#EF6B35]/20"
                 onChange={(e) =>
                   setLocation({ ...location, address: e.target.value })
                 }
@@ -195,13 +175,13 @@ const BookingPage = () => {
               <div className="flex gap-4 pt-4">
                 <button
                   onClick={handlePrevStep}
-                  className="flex-1 py-4 font-bold text-gray-400"
+                  className="flex-1 py-4 font-bold text-[#EF6B35]"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="flex-[2] py-4 bg-black text-white rounded-2xl font-bold"
+                  className="flex-[2] py-4 bg-[#EF6B35] text-white rounded-2xl font-bold"
                 >
                   Review Price
                 </button>
@@ -209,23 +189,21 @@ const BookingPage = () => {
             </div>
           )}
 
-          {/* STEP 3: Dynamic Cost Review */}
+          {/* STEP 3: Price Review */}
           {step === 3 && (
             <div className="space-y-6 animate-in zoom-in-95">
               <h2 className="text-2xl font-black text-gray-800">
                 3. Price Summary
               </h2>
               <div className="bg-orange-50/50 rounded-3xl p-8 border border-orange-100">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-gray-500 font-medium">
-                    Service Rate
-                  </span>
+                <div className="flex justify-between mb-4">
+                  <span className="text-gray-500">Service Rate</span>
                   <span className="font-bold text-gray-800">
                     {service.price} / unit
                   </span>
                 </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-gray-500 font-medium">Duration</span>
+                <div className="flex justify-between mb-4">
+                  <span className="text-gray-500">Duration</span>
                   <span className="font-bold text-gray-800">
                     {duration} Units
                   </span>
@@ -240,23 +218,18 @@ const BookingPage = () => {
                       ${totalCost}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-green-600 font-bold bg-green-100 px-2 py-1 rounded-md uppercase">
-                      Secure Payment
-                    </p>
-                  </div>
                 </div>
               </div>
               <div className="flex gap-4">
                 <button
                   onClick={handlePrevStep}
-                  className="flex-1 py-4 font-bold text-gray-400"
+                  className="flex-1 py-4 font-bold text-[#EF6B35]"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="flex-[2] py-4 bg-[#EF6B35] text-white rounded-2xl font-bold shadow-lg shadow-orange-100"
+                  className="flex-[2] py-4 bg-[#EF6B35] text-white rounded-2xl font-bold shadow-lg"
                 >
                   Confirm Booking
                 </button>
@@ -264,7 +237,7 @@ const BookingPage = () => {
             </div>
           )}
 
-          {/* STEP 4: Confirm & Save */}
+          {/* STEP 4: Final Confirmation */}
           {step === 4 && (
             <div className="text-center space-y-6 animate-in fade-in scale-95">
               <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -274,13 +247,9 @@ const BookingPage = () => {
                 Confirm Booking?
               </h2>
               <p className="text-gray-500 px-6">
-                Your request will be sent to{" "}
-                <span className="font-bold text-black">{service.provider}</span>
-                . The status will be{" "}
-                <span className="bg-orange-100 text-[#EF6B35] px-2 py-1 rounded-lg font-bold">
-                  Pending
-                </span>
-                .
+                Your request for{" "}
+                <span className="font-bold text-black">{service.title}</span>{" "}
+                will be processed.
               </p>
 
               <div className="pt-6 space-y-3">
@@ -293,12 +262,13 @@ const BookingPage = () => {
                     <Loader2 className="animate-spin" />
                   ) : (
                     <>
-                      <CreditCard /> Confirm & Pay ${totalCost}
+                      {" "}
+                      <CreditCard /> Confirm & Pay ${totalCost}{" "}
                     </>
                   )}
                 </button>
                 <button
-                  onClick={() => setStep(1)}
+                  onClick={() => router.push("/services")}
                   className="text-sm font-bold text-gray-400 hover:text-black transition-colors"
                 >
                   Cancel and start over

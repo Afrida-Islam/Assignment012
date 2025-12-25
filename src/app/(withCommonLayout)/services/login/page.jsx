@@ -25,14 +25,12 @@ const LoginPage = () => {
     );
 
     if (foundUser) {
-      // লগইন সফল
       setUser({
         email: foundUser.email,
         name: foundUser.name,
       });
-      router.push("/dashboard");
+      router.push("/");
     } else {
-      // লগইন ব্যর্থ
       alert(
         "Invalid email or password. Please sign up if you don't have an account."
       );

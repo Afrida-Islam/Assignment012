@@ -1,13 +1,15 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
-// import BookingsContextProvider from "@/context/booking.context";
-import UserContextProvider from "../../Context/user.context";
+import BookingContextProvider from "../../Context/booking.context";
+import UserContextProvider from "../../Context/user.context.jsx";
 import React from "react";
 
 const Providers = ({ children }) => {
   return (
     <SessionProvider>
-      <UserContextProvider>{children}</UserContextProvider>
+      <UserContextProvider>
+        <BookingContextProvider>{children}</BookingContextProvider>
+      </UserContextProvider>
     </SessionProvider>
   );
 };

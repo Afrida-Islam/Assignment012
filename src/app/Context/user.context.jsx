@@ -1,16 +1,24 @@
 "use client";
-import React, { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
-export const UserContext = createContext(null);
+export const UserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const value = {
-    user,
-    setUser,
-  };
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  // সার্ভার রিস্টার্ট দিলেও যেন লগআউট না হয় তার জন্য এই অংশটি:
+  useEffect(() => {
+    const savedUser = localStorage.getItem("logged_in_user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export default UserContextProvider;
