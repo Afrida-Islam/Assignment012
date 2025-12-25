@@ -5,9 +5,10 @@ import React, { use } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, MapPin, CreditCard, ExternalLink, XCircle } from "lucide-react";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 
 const MyBookings = () => {
-  // ১. কনটেক্সট থেকে bookings এবং setBookings (বা আপনার ডিলিট ফাংশন) বের করুন
   const { bookings, setBookings } = use(BookingContext);
 
   const getStatusColor = (status) => {
@@ -49,9 +50,10 @@ const MyBookings = () => {
   const fallbackImage = "https://via.placeholder.com/200x200?text=No+Image";
 
   return (
-    <div className="max-w-7xl mx-auto p-6 md:p-10 min-h-screen bg-gray-50/50">
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-black text-gray-800 tracking-tight">
+    <div className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-gray-100 bg-white transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] hover:-translate-y-2">
+      <Navbar />
+      <div className="flex justify-between items-center mb-10 mt-10 ml-10">
+        <h1 className="text-4xl font-black text-gray-800 tracking-tight ">
           My Bookings
         </h1>
         <span className="bg-orange-100 text-[#EF6B35] px-4 py-1 rounded-full text-sm font-bold">
@@ -60,7 +62,7 @@ const MyBookings = () => {
       </div>
 
       {!bookings || bookings.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200 shadow-sm">
+        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200 shadow-sm ">
           <h2 className="font-bold text-4xl text-gray-300 italic">
             No bookings yet
           </h2>
@@ -71,7 +73,7 @@ const MyBookings = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 mb-10">
           {bookings.map((item) => {
             const bookingId = item._id || item.id;
             return (
@@ -151,6 +153,7 @@ const MyBookings = () => {
           })}
         </div>
       )}
+      <Footer />
     </div>
   );
 };
