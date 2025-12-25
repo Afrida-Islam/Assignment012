@@ -58,7 +58,7 @@ const Navbar = () => {
 
             {user?.email && (
               <li className="hover:text-[#EF6B35] transition-colors text-[28px] text-[#EF6B35]">
-                <Link href="/services/my-booking">My Booking</Link>
+                <Link href="/mybooking">My Booking</Link>
               </li>
             )}
           </ul>

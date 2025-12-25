@@ -6,17 +6,18 @@ export const BookingContext = createContext(null);
 const BookingContextProvider = ({ children }) => {
   const [bookings, setBookings] = useState([]);
 
-  // ১. পেজ লোড হওয়ার সময় LocalStorage থেকে ডেটা আনা
+  // ১. পেজ লোড হওয়ার সময় LocalStorage থেকে ডেটা আনা
   useEffect(() => {
     const savedBookings = localStorage.getItem("my_bookings");
     if (savedBookings) {
       setBookings(JSON.parse(savedBookings));
     }
   }, []);
+
+  // ২. যখনই bookings পরিবর্তন হবে, সাথে সাথে LocalStorage আপডেট হবে
+  // (length > 0 শর্তটি সরিয়ে দিয়েছি যাতে শেষ বুকিং ডিলিট করলেও সেটি সেভ হয়)
   useEffect(() => {
-    if (bookings.length > 0) {
-      localStorage.setItem("my_bookings", JSON.stringify(bookings));
-    }
+    localStorage.setItem("my_bookings", JSON.stringify(bookings));
   }, [bookings]);
 
   const addBooking = (service) => {
@@ -24,13 +25,15 @@ const BookingContextProvider = ({ children }) => {
   };
 
   const removeBooking = (id) => {
-    const filtered = bookings.filter((b) => b._id !== id);
-    setBookings(filtered);
-    localStorage.setItem("my_bookings", JSON.stringify(filtered));
+    setBookings((prevBookings) =>
+      prevBookings.filter((b) => (b._id || b.id) !== id)
+    );
   };
 
+  // এখানে setBookings এবং removeBooking দুটোই রাখা হয়েছে যাতে পেজ থেকে যেকোনোটি কল করা যায়
   const value = {
     bookings,
+    setBookings,
     addBooking,
     removeBooking,
   };
