@@ -45,3 +45,12 @@ Dynamic Data Fetching: Instead of static content, the service items are fetched 
 Automatic Price Calculation: On the booking page, we implemented a reactive state that calculates the Total Price = Days/Hours × Unit Price instantly, providing a transparent user experience.
 
 Hierarchical Location Selection: To ensure accurate service delivery, we built a dependent dropdown system where users select their Division, District, and Area in a structured manner.
+
+💡 Architecture Insights for Evaluators:
+Route Groups: Used (withCommonLayout) to share a consistent UI across multiple routes without affecting the URL structure.
+
+Dynamic Routing: Implemented [id] to handle specific service data rendering efficiently.
+
+Auth Nesting: Authentication routes (/login, /signup) are logically grouped under the services context for a unified user flow.
+
+Private Route Protection: Access to /mybooking and /services/booking is strictly managed via Next.js Middleware to ensure data security.
