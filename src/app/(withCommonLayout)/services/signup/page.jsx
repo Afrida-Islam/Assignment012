@@ -59,10 +59,9 @@ const SignupPage = () => {
     existingUsers.push(newUser);
     localStorage.setItem("users", JSON.stringify(existingUsers));
     localStorage.setItem("logged_in_user", JSON.stringify(newUser));
-    // ৪. সেশন সেট করা
     setUser({ name, email });
     alert("Account Created Successfully!");
-    router.push("/services"); // অথবা আপনার পছন্দের ড্যাশবোর্ড পাথ
+    router.push("/services");
   };
 
   return (

@@ -128,7 +128,7 @@ const Navbar = () => {
               <Link
                 href="/mybooking"
                 onClick={toggleMenu}
-                className="text-3xl font-bold text-[#EF6B35]"
+                className="text-[28px] font-bold text-[#EF6B35]"
               >
                 My Booking
               </Link>

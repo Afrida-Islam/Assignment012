@@ -94,19 +94,12 @@ const HeroBanner = () => {
                 <Image
                   src={BannerImg}
                   alt="Logo"
-                  // width={60}
-                  // height={60}
                   className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-700"
                 />
-                {/* <img
-                  src="https://images.unsplash.com/photo-1581571521426-382a8863f6a2?q=80&w=800"
-                  alt="Elderly Care"
-                  className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 transition-all duration-700"
-                /> */}
               </div>
 
               {/* Accent Decorative Elements */}
-              <div className="absolute -bottom-6 -left-6 w-16 h-16 sm:w-20 sm:h-20 bg-[#EF6B35] rounded-full border-8 border-white shadow-lg" />
+              <div className="absolute -bottom-6 -left-8 w-16 h-16 sm:w-20 sm:h-20 bg-[#EF6B35] rounded-full border-8 border-white shadow-lg" />
               <div className="absolute top-10 -right-4 w-10 h-10 bg-orange-300 rounded-full opacity-60" />
             </motion.div>
           </motion.div>
