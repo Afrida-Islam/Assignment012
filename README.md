@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+                Care.IO (Care.xyz)
 
-## Getting Started
+Live Link:https://assignment012-kdhw.vercel.app/
 
-First, run the development server:
+📄 Short Project Description
+Care.IO (Care.xyz) is a trusted web platform designed to provide reliable care services for children, the elderly, and individuals with special needs. It connects families with professional caregivers for services like babysitting and home-based nursing. The project’s core mission is to make finding and booking caregivers easy, secure, and accessible for everyone through a seamless digital experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+📦 Setup & Installation Instructions
+To set up and run Care.IO on your local machine, follow these steps:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Clone the Repository:https://github.com/Afrida-Islam/Assignment012
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Install Dependencies: Make sure you have installed, then run:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Environment Variables: Create a .env.local file in the root directory and add your configuration keys:
 
-## Learn More
+Run the Development Server:
 
-To learn more about Next.js, take a look at the following resources:
+Now, open in your browser to see the application in action.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+✅ List of Implemented Features
+Responsive UI/UX: A fully mobile-first, responsive design built with Tailwind CSS.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+7+ Landing Page Sections: Comprehensive homepage including Hero, Features, About, Stats, Pricing, Testimonial, and Contact.
 
-## Deploy on Vercel
+Authentication (NextAuth.js): Secure login system using Credentials Provider with session management.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Persistent Sessions: Users remain logged in across page refreshes via JWT and Cookies.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Route Protection (Middleware): Unauthorized users are automatically redirected to the login page when trying to access private routes.
+
+Dynamic Service Listing: Service data is fetched and displayed dynamically from an API/JSON source.
+
+Smart Booking System: Real-time total cost calculation based on service duration.
+
+Input Validation: Strict registration rules (NID validation and complex password requirements).
+
+💡 Brief Explanation of Features
+NextAuth Integration: We implemented NextAuth.js to handle secure authentication. The system uses a CredentialsProvider to verify users against hardcoded/mock data, and the session is stored in a secure cookie to manage user state globally.
+
+Route Guards & Middleware: To ensure privacy, we used Next.js Middleware. This logic checks if a session token exists; if a user tries to access /my-bookings or /booking/:id without logging in, they are blocked and sent to the /login page.
+
+Dynamic Data Fetching: Instead of static content, the service items are fetched from an external source using fetch APIs. This allows the platform to be scalable and always show updated caregiver information.
+
+Automatic Price Calculation: On the booking page, we implemented a reactive state that calculates the Total Price = Days/Hours × Unit Price instantly, providing a transparent user experience.
+
+Hierarchical Location Selection: To ensure accurate service delivery, we built a dependent dropdown system where users select their Division, District, and Area in a structured manner.
