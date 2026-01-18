@@ -46,6 +46,9 @@ Automatic Price Calculation: On the booking page, we implemented a reactive stat
 
 Hierarchical Location Selection: To ensure accurate service delivery, we built a dependent dropdown system where users select their Division, District, and Area in a structured manner.
 
+
+🛤️ Route Summary
+
 💡 Architecture Insights for Evaluators:
 Route Groups: Used (withCommonLayout) to share a consistent UI across multiple routes without affecting the URL structure.
 
