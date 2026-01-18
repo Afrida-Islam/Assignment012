@@ -6,6 +6,7 @@ import ServicesSection from "./Components/ServicesSection";
 import Features from "./Components/Features";
 import About from "./Components/About";
 import Testimonials from "./Components/Testimonials";
+import Contact from "./Components/Contact";
 import Footer from "./Components/Footer";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       {/* <div>{children}</div> */}
       <HelpSection />
       <ServicesSection />
+      <Contact/>
       <Footer />
     </h1>
   );
